@@ -7,4 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="progress_bar_200">#370073EE</color>
+    <color name="progress_bar_700">#2990FF</color>
 </resources>

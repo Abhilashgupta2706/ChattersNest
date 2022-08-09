@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.*
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -13,13 +15,18 @@ import com.google.firebase.database.*
 class MainActivity : AppCompatActivity() {
     private lateinit var rvUser: RecyclerView
     private lateinit var userList: ArrayList<User>
+    private lateinit var pbLoadingUsers: ProgressBar
     private lateinit var adapter: UserAdapter
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mdbRef: DatabaseReference
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        pbLoadingUsers = findViewById(R.id.pbLoadingUsers)
+        pbLoadingUsers.visibility = VISIBLE
 
         mAuth = FirebaseAuth.getInstance()
         mdbRef = FirebaseDatabase.getInstance().getReference()
@@ -42,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                         userList.add(currentUser!!)
                     }
                 }
-
+                pbLoadingUsers.visibility = GONE
                 adapter.notifyDataSetChanged()
             }
 
