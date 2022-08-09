@@ -10,4 +10,7 @@
 
     <color name="progress_bar_200">#370073EE</color>
     <color name="progress_bar_700">#2990FF</color>
+
+    <color name="sent_msg_bg">#F4F4F4</color>
+    <color name="received_msg_bg">#FFD6EAFF</color>
 </resources>

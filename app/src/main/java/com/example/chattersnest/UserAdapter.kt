@@ -1,11 +1,13 @@
 package com.example.chattersnest
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 
 class UserAdapter(private val context: Context, private val userList: ArrayList<User>) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -19,6 +21,15 @@ class UserAdapter(private val context: Context, private val userList: ArrayList<
         val currentUser = userList[position]
         holder.tvUserFullName.text = currentUser.fullName
         holder.tvUserEmail.text = currentUser.email
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, ChatActivity::class.java)
+
+            intent.putExtra("UserName", currentUser.fullName)
+            intent.putExtra("UserUid", currentUser.uid)
+
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
