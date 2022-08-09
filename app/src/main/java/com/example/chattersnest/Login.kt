@@ -22,6 +22,8 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        supportActionBar?.hide()
+
         mAuth = FirebaseAuth.getInstance()
 
         etLoginEmail = findViewById(R.id.etLoginEmail)
@@ -64,7 +66,7 @@ class Login : AppCompatActivity() {
 
                     Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Login Failed, Try again.", Toast.LENGTH_SHORT).show()
                 }
             }
     }

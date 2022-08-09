@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class Signup : AppCompatActivity() {
 
@@ -19,11 +21,13 @@ class Signup : AppCompatActivity() {
     private lateinit var tvSignupExistingUser: TextView
 
     private lateinit var mAuth: FirebaseAuth
-
+    private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+
+        supportActionBar?.hide()
 
         mAuth = FirebaseAuth.getInstance()
 
@@ -46,12 +50,11 @@ class Signup : AppCompatActivity() {
             val confirmPassword = etSignupConfirmPassword.text.toString()
 
             signup(fullName, email, password, confirmPassword)
-
         }
     }
 
-    private fun signup(name: String, email: String, password: String, confirmPassword: String) {
-        if (name.isEmpty() or email.isEmpty() or password.isEmpty()) {
+    private fun signup(fullName: String, email: String, password: String, confirmPassword: String) {
+        if (fullName.isEmpty() or email.isEmpty() or password.isEmpty()) {
             return Toast.makeText(
                 this,
                 "Make sure all details are filled",
@@ -79,6 +82,7 @@ class Signup : AppCompatActivity() {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    addUserToDatabase(fullName, email, mAuth.currentUser?.uid!!)
                     val intent = Intent(this@Signup, MainActivity::class.java)
                     startActivity(intent)
 
@@ -87,6 +91,14 @@ class Signup : AppCompatActivity() {
                     Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
                 }
             }
+
+    }
+
+    private fun addUserToDatabase(fullName: String, email: String, uid: String?) {
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+        if (uid != null) {
+            mDbRef.child("user").child(uid).setValue(User(fullName, email, uid))
+        }
 
     }
 }
