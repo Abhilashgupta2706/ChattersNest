@@ -84,6 +84,7 @@ class Signup : AppCompatActivity() {
                 if (task.isSuccessful) {
                     addUserToDatabase(fullName, email, mAuth.currentUser?.uid!!)
                     val intent = Intent(this@Signup, MainActivity::class.java)
+                    finish()
                     startActivity(intent)
 
                     Toast.makeText(this, "Signing Successful", Toast.LENGTH_SHORT).show()
