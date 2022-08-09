@@ -15,14 +15,14 @@ class MessageAdapter(val context: Context, private val messageList: ArrayList<Me
     private val ITEM_SENT = 2
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == 1) {
+        if (viewType == 1) {
             val view: View =
                 LayoutInflater.from(context).inflate(R.layout.received_msg_layout, parent, false)
-            ReceiveViewHolder(view)
+            return ReceiveViewHolder(view)
         } else {
             val view: View =
                 LayoutInflater.from(context).inflate(R.layout.send_msg_layout, parent, false)
-            SendViewHolder(view)
+            return SendViewHolder(view)
         }
     }
 

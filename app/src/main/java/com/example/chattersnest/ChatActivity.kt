@@ -7,6 +7,9 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class ChatActivity : AppCompatActivity() {
 
@@ -16,13 +19,22 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var fabSendMsg: FloatingActionButton
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
+    private lateinit var mDbRef: DatabaseReference
+
+    var receiverRoom: String? = null
+    var senderRoom: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
         val userName = intent.getStringExtra("UserName")
-        val userUid = intent.getStringExtra("UserUid")
+        val receiverUid = intent.getStringExtra("UserUid")
+        val senderUid = FirebaseAuth.getInstance().currentUser?.uid
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+
+        senderRoom = receiverUid + senderUid
+        receiverRoom = senderUid + receiverUid
 
         supportActionBar?.title = userName
 
@@ -33,5 +45,29 @@ class ChatActivity : AppCompatActivity() {
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
 
+        fabSendMsg.setOnClickListener {
+            if (etSendMessage.text.toString() == "") {
+                return@setOnClickListener
+            }
+
+            val message = etSendMessage.text.toString()
+            val messageObj = Message(message, senderUid)
+
+            mDbRef
+                .child("chats")
+                .child(senderRoom!!)
+                .child("messages")
+                .push()
+                .setValue(messageObj).addOnSuccessListener {
+                    mDbRef
+                        .child("chats")
+                        .child(receiverRoom!!)
+                        .child("messages")
+                        .push()
+                        .setValue(messageObj)
+                }
+
+            etSendMessage.setText("")
+        }
     }
 }
