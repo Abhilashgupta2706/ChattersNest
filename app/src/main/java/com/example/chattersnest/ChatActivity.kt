@@ -21,8 +21,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
 
-    var receiverRoom: String? = null
-    var senderRoom: String? = null
+    private var receiverRoom: String? = null
+    private var senderRoom: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +37,16 @@ class ChatActivity : AppCompatActivity() {
         receiverRoom = senderUid + receiverUid
 
         supportActionBar?.title = userName
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         rvChat = findViewById(R.id.rvChat)
         etSendMessage = findViewById(R.id.etSendMessage)
         fabSendMsg = findViewById(R.id.fabSendMsg)
 
+
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
+
 
         rvChat.layoutManager = LinearLayoutManager(this)
         rvChat.adapter = messageAdapter
@@ -60,6 +63,7 @@ class ChatActivity : AppCompatActivity() {
                         val message = postSnapShot.getValue(Message::class.java)
                         messageList.add(message!!)
                     }
+                    rvChat.smoothScrollToPosition(messageList.size);
                     messageAdapter.notifyDataSetChanged()
                 }
 
@@ -72,6 +76,8 @@ class ChatActivity : AppCompatActivity() {
             if (etSendMessage.text.toString() == "") {
                 return@setOnClickListener
             }
+
+            rvChat.smoothScrollToPosition(messageList.size);
 
             val message = etSendMessage.text.toString()
             val messageObj = Message(message, senderUid)

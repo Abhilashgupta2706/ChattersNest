@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menuLogout"
-        android:title="Log Out" />
+        android:title="Log Out"
+        android:icon="@drawable/ab_logout"
+        app:showAsAction="always"
+        />
+<!--    <item-->
+<!--        android:id="@+id/menuLogout"-->
+<!--        android:title="Log Out" />-->
 </menu>
