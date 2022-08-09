@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class ChatActivity : AppCompatActivity() {
 
@@ -44,6 +44,29 @@ class ChatActivity : AppCompatActivity() {
 
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
+
+        rvChat.layoutManager = LinearLayoutManager(this)
+        rvChat.adapter = messageAdapter
+
+        mDbRef
+            .child("chats")
+            .child(senderRoom!!)
+            .child("messages")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    messageList.clear()
+                    for (postSnapShot in snapshot.children) {
+                        val message = postSnapShot.getValue(Message::class.java)
+                        messageList.add(message!!)
+                    }
+                    messageAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
 
         fabSendMsg.setOnClickListener {
             if (etSendMessage.text.toString() == "") {
